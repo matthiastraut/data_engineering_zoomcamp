@@ -1,0 +1,25 @@
+{"timestamp":"2026-02-09T20:43:52.953218Z","level":"info","event":"DAG bundles loaded: dags-folder, example_dags","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager","filename":"manager.py","lineno":179}
+{"timestamp":"2026-02-09T20:43:52.964225Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/function_dag.py","logger":"airflow.models.dagbag.BundleDagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-02-09T20:44:24.270768Z","level":"error","event":"Process timed out, PID: 200","logger":"airflow.models.dagbag","filename":"dagbag.py","lineno":134}
+{"timestamp":"2026-02-09T20:44:24.285478Z","level":"error","event":"Exception ignored in: <function WeakKeyDictionary.__init__.<locals>.remove at 0xffff8af942c0>","logger":"task.stderr"}
+{"timestamp":"2026-02-09T20:44:24.288097Z","level":"error","event":"Traceback (most recent call last):","logger":"task.stderr"}
+{"timestamp":"2026-02-09T20:44:24.313249Z","level":"error","event":"  File \"/usr/python/lib/python3.12/weakref.py\", line 369, in remove","logger":"task.stderr"}
+{"timestamp":"2026-02-09T20:44:24.315521Z","level":"error","event":"    def remove(k, selfref=ref(self)):","logger":"task.stderr"}
+{"timestamp":"2026-02-09T20:44:24.320418Z","level":"error","event":"","logger":"task.stderr"}
+{"timestamp":"2026-02-09T20:44:24.323676Z","level":"error","event":"  File \"/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py\", line 135, in handle_timeout","logger":"task.stderr"}
+{"timestamp":"2026-02-09T20:44:24.327596Z","level":"error","event":"    raise AirflowTaskTimeout(error_message)","logger":"task.stderr"}
+{"timestamp":"2026-02-09T20:44:24.330178Z","level":"error","event":"airflow.exceptions.AirflowTaskTimeout: DagBag import timeout for /opt/airflow/dags/function_dag.py after 30.0s.","logger":"task.stderr"}
+{"timestamp":"2026-02-09T20:44:24.333116Z","level":"error","event":"Please take a look at these docs to improve your DAG import time:","logger":"task.stderr"}
+{"timestamp":"2026-02-09T20:44:24.339329Z","level":"error","event":"* https://airflow.apache.org/docs/apache-airflow/3.1.7/best-practices.html#top-level-python-code","logger":"task.stderr"}
+{"timestamp":"2026-02-09T20:44:24.358141Z","level":"error","event":"* https://airflow.apache.org/docs/apache-airflow/3.1.7/best-practices.html#reducing-dag-complexity, PID: 200","logger":"task.stderr"}
+{"timestamp":"2026-02-09T20:44:32.601463Z","level":"warning","event":"The `airflow.operators.python.PythonOperator` attribute is deprecated. Please use `'airflow.providers.standard.operators.python.PythonOperator'`.","category":"DeprecatedImportWarning","filename":"/opt/airflow/dags/function_dag.py","lineno":5,"logger":"py.warnings"}
+{"timestamp":"2026-02-09T20:44:32.885216Z","level":"info","event":"Task instance is in running state","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:44:32.945614Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.QUEUED","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:44:32.964188Z","level":"info","event":"Current task name:upload_to_gcs_03","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:44:32.965829Z","level":"info","event":"Dag name:hw3_yellow_taxi_to_gcs","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:44:33.367179Z","level":"info","event":"Uploading /tmp/yellow_tripdata_2024-03.parquet to gs://zoomcamp-hw3-bucket/yellow_taxi_2024/yellow_tripdata_2024-03.parquet...","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:56:10.352882Z","level":"info","event":"Upload complete.","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:56:10.406615Z","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.operators.python.PythonOperator","filename":"python.py","lineno":230}
+{"timestamp":"2026-02-09T20:56:10.499342Z","level":"info","event":"Task instance in success state","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:56:10.500401Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.RUNNING","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:56:10.508371Z","level":"info","event":"Task operator:<Task(PythonOperator): upload_to_gcs_03>","logger":"task.stdout"}

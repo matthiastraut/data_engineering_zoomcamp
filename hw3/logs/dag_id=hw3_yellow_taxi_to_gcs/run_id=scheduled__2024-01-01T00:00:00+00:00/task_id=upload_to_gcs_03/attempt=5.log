@@ -1,0 +1,13 @@
+{"timestamp":"2026-02-09T20:45:10.425324Z","level":"info","event":"DAG bundles loaded: dags-folder, example_dags","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager","filename":"manager.py","lineno":179}
+{"timestamp":"2026-02-09T20:45:10.429444Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/function_dag.py","logger":"airflow.models.dagbag.BundleDagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-02-09T20:45:20.015063Z","level":"warning","event":"The `airflow.operators.python.PythonOperator` attribute is deprecated. Please use `'airflow.providers.standard.operators.python.PythonOperator'`.","category":"DeprecatedImportWarning","filename":"/opt/airflow/dags/function_dag.py","lineno":5,"logger":"py.warnings"}
+{"timestamp":"2026-02-09T20:45:20.134202Z","level":"info","event":"Task instance is in running state","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:45:20.134878Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.QUEUED","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:45:20.135749Z","level":"info","event":"Current task name:upload_to_gcs_03","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:45:20.136187Z","level":"info","event":"Dag name:hw3_yellow_taxi_to_gcs","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:45:20.309801Z","level":"info","event":"Uploading /tmp/yellow_tripdata_2024-03.parquet to gs://zoomcamp-hw3-bucket/yellow_taxi_2024/yellow_tripdata_2024-03.parquet...","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:54:26.770468Z","level":"info","event":"Upload complete.","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:54:26.803280Z","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.operators.python.PythonOperator","filename":"python.py","lineno":230}
+{"timestamp":"2026-02-09T20:54:26.867941Z","level":"info","event":"Task instance in success state","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:54:26.868472Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.RUNNING","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:54:26.877277Z","level":"info","event":"Task operator:<Task(PythonOperator): upload_to_gcs_03>","logger":"task.stdout"}

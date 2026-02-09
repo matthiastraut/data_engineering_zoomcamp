@@ -1,0 +1,13 @@
+{"timestamp":"2026-02-09T20:29:12.168897Z","level":"info","event":"DAG bundles loaded: dags-folder, example_dags","logger":"airflow.dag_processing.bundles.manager.DagBundlesManager","filename":"manager.py","lineno":179}
+{"timestamp":"2026-02-09T20:29:12.183811Z","level":"info","event":"Filling up the DagBag from /opt/airflow/dags/function_dag.py","logger":"airflow.models.dagbag.BundleDagBag","filename":"dagbag.py","lineno":593}
+{"timestamp":"2026-02-09T20:29:41.455961Z","level":"warning","event":"The `airflow.operators.python.PythonOperator` attribute is deprecated. Please use `'airflow.providers.standard.operators.python.PythonOperator'`.","category":"DeprecatedImportWarning","filename":"/opt/airflow/dags/function_dag.py","lineno":5,"logger":"py.warnings"}
+{"timestamp":"2026-02-09T20:29:42.019739Z","level":"info","event":"Task instance is in running state","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:29:42.022279Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.QUEUED","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:29:42.029747Z","level":"info","event":"Current task name:download_taxi_data_03","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:29:42.029991Z","level":"info","event":"Dag name:hw3_yellow_taxi_to_gcs","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:29:42.039976Z","level":"info","event":"Downloading https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2024-03.parquet...","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:30:39.586451Z","level":"info","event":"Successfully downloaded to /tmp/yellow_tripdata_2024-03.parquet","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:30:38.871571Z","level":"info","event":"Done. Returned value was: None","logger":"airflow.task.operators.airflow.providers.standard.operators.python.PythonOperator","filename":"python.py","lineno":230}
+{"timestamp":"2026-02-09T20:30:40.394979Z","level":"info","event":"Task instance in success state","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:30:40.397153Z","level":"info","event":" Previous state of the Task instance: TaskInstanceState.RUNNING","logger":"task.stdout"}
+{"timestamp":"2026-02-09T20:30:40.449829Z","level":"info","event":"Task operator:<Task(PythonOperator): download_taxi_data_03>","logger":"task.stdout"}
