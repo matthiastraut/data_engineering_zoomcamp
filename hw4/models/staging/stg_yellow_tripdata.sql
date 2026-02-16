@@ -1,3 +1,5 @@
+{{ config(schema='zoomcamp_hw3') }}
+
 with 
 
 source as (

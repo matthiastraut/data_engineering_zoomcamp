@@ -7,4 +7,4 @@ sources:
     tables:
       - name: green-taxi-2024
       - name: yellow-taxi-2024
-      - name: fhv_tripdata
+      #- name: fhv_tripdata
