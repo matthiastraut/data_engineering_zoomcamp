@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: taxi
+    database: project-df2ba729-605a-4554-917  # Project ID
+    schema: zoomcamp_hw3                      # BigQuery dataset name
+    tables:
+      - name: green-taxi-2024
+      - name: yellow-taxi-2024
+      - name: fhv_tripdata
