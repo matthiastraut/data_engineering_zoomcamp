@@ -1,4 +1,10 @@
 data-engineering-zoomcamp/
 .env
 hw3/logs/
-hw3/gcp.json
+gcp.json
+
+.bruin.yml
+logs/runs
+logs/*.log
+__pycache__/
+*.py[cod]

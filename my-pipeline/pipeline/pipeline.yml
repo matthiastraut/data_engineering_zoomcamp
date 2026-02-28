@@ -1,0 +1,20 @@
+name: nyc_taxi
+schedule: monthly
+start_date: "2019-01-01"
+default_connections:
+  duckdb: duckdb-default
+
+# TODO: Define pipeline variables using JSON Schema and defaults.
+# - Variables must have a `default` so assets can render without `--var`.
+# - In SQL/YAML assets: reference as `{{ var.my_variable }}`.
+# - In Python assets: read JSON from env var `BRUIN_VARS`.
+variables:
+  # TODO: Define `taxi_types` as an array of strings with a sensible default.
+  taxi_types:
+    type: array # should be: array
+    items:
+      type: string # should be: string
+    default: ["yellow", "green"] # e.g. ["yellow", "green"]
+#   other_string_var: (optional) Add your own variable and use it in both Python and SQL assets.
+#     type: string
+#     default: "my_value"

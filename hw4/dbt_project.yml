@@ -1,5 +1,6 @@
 name: 'taxi'
 version: '1.0.0'
+config-version: 2
 
 # Require a specific dbt version for reproducibility
 require-dbt-version: [">=1.7.0", "<2.0.0"]
@@ -21,9 +22,9 @@ clean-targets:
 
 # Project-level variables
 vars:
-  # Date range for dev environment sampling
-  dev_start_date: '2019-01-01'
-  dev_end_date: '2019-02-01'
+  # This is often used in the course to limit data in development
+  # Set to false to run the full 2019-2020 dataset
+  is_test_run: false
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
@@ -31,7 +32,12 @@ models:
   taxi_rides_ny:
     staging:
       +materialized: view
-    intermediate:
-      +materialized: table
     marts:
       +materialized: table
+
+# Configuring seeds
+seeds:
+  taxi_rides_ny:
+    taxi_zone_lookup:
+      +column_types:
+        locationid: numeric
