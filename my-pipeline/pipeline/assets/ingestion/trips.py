@@ -11,11 +11,11 @@ materialization:
 columns:
   - name: VendorID
     type: integer
-  - name: tpep_pickup_datetime
+  - name: pickup_datetime
     type: timestamp
     checks:
     - name: not_null
-  - name: tpep_dropoff_datetime
+  - name: dropoff_datetime
     type: timestamp
   - name: passenger_count
     type: integer
@@ -25,9 +25,9 @@ columns:
     type: integer
   - name: store_and_fwd_flag
     type: string
-  - name: PULocationID
+  - name: pickup_location_id
     type: integer
-  - name: DOLocationID
+  - name: dropoff_location_id
     type: integer
   - name: payment_type
     type: integer
@@ -46,12 +46,6 @@ columns:
   - name: total_amount
     type: float
   - name: congestion_surcharge
-    type: float
-  - name: lpep_pickup_datetime
-    type: timestamp
-  - name: lpep_dropoff_datetime
-    type: timestamp
-  - name: ehail_fee
     type: float
   - name: trip_type
     type: integer
@@ -85,7 +79,7 @@ def materialize():
     end_date = datetime.strptime(end_date_str, "%Y-%m-%d") if end_date_str else datetime(2024, 1, 31)
     
     # Cap the end_date at Nov 2025 as recommended in README
-    data_availability_limit = datetime(2025, 11, 30)
+    data_availability_limit = datetime(2024, 1, 31)
     if end_date > data_availability_limit:
         print(f"Capping end_date from {end_date.strftime('%Y-%m-%d')} to 2025-11-30")
         end_date = data_availability_limit
@@ -110,6 +104,36 @@ def materialize():
                 
                 # Load parquet data into pandas
                 df = pd.read_parquet(io.BytesIO(response.content))
+
+                # Normalize columns: NYC Taxi uses different prefixes (tpep/lpep) for yellow/green cabs
+                rename_map = {
+                    'tpep_pickup_datetime': 'pickup_datetime',
+                    'tpep_dropoff_datetime': 'dropoff_datetime',
+                    'lpep_pickup_datetime': 'pickup_datetime',
+                    'lpep_dropoff_datetime': 'dropoff_datetime',
+                    'PULocationID': 'pickup_location_id',
+                    'DOLocationID': 'dropoff_location_id',
+                }
+                df = df.rename(columns=rename_map)
+
+                # Ensure only the columns we need are kept to save memory and match destination schema
+                # (Removing columns that aren't common across both taxi types or aren't in our schema)
+                required_cols = [
+                    'VendorID', 'pickup_datetime', 'dropoff_datetime', 'passenger_count',
+                    'trip_distance', 'RatecodeID', 'store_and_fwd_flag', 'pickup_location_id',
+                    'dropoff_location_id', 'payment_type', 'fare_amount', 'extra', 'mta_tax',
+                    'tip_amount', 'tolls_amount', 'improvement_surcharge', 'total_amount',
+                    'congestion_surcharge'
+                ]
+                
+                # Check for columns and fill with None if they don't exist (e.g. trip_type)
+                if 'trip_type' in df.columns:
+                    required_cols.append('trip_type')
+                else:
+                    df['trip_type'] = None
+                    required_cols.append('trip_type')
+
+                df = df[required_cols].copy()
                 
                 # Add metadata columns
                 df['taxi_type'] = taxi_type

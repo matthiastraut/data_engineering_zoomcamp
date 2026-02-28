@@ -42,6 +42,6 @@ WHERE t.pickup_datetime >= '{{ start_datetime }}'
   AND t.pickup_datetime < '{{ end_datetime }}'
 QUALIFY ROW_NUMBER() OVER (
     PARTITION BY t.pickup_datetime, t.dropoff_datetime,
-                 t.pickup_location_id, t.dropoff_location_id, t.fare_amount
+                 t.pickup_location_id, t.dropoff_location_id, CAST(t.fare_amount AS NUMERIC)
     ORDER BY t.pickup_datetime
 ) = 1
