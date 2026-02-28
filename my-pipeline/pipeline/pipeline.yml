@@ -1,8 +1,8 @@
 name: nyc_taxi
 schedule: monthly
-start_date: "2019-01-01"
+start_date: "2024-01-01"
 default_connections:
-  duckdb: duckdb-default
+  google_cloud_platform: gcp-default
 
 # TODO: Define pipeline variables using JSON Schema and defaults.
 # - Variables must have a `default` so assets can render without `--var`.
@@ -14,7 +14,7 @@ variables:
     type: array # should be: array
     items:
       type: string # should be: string
-    default: ["yellow", "green"] # e.g. ["yellow", "green"]
+    default: ["yellow"] # e.g. ["yellow", "green"]
 #   other_string_var: (optional) Add your own variable and use it in both Python and SQL assets.
 #     type: string
 #     default: "my_value"
