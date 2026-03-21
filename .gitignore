@@ -8,3 +8,7 @@ logs/runs
 logs/*.log
 __pycache__/
 *.py[cod]
+
+hw6/2025-11/
+hw6/taxi_zone_lookup.csv
+hw6/yellow_tripdata_2025-11.parquet
