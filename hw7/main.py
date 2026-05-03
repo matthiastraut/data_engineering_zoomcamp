@@ -14,21 +14,31 @@ def main():
     start_time = time.time()
     csv_file = 'green_tripdata_2019-10.csv'  # change to your CSV file path if needed
 
+    columns_to_keep = [
+        'lpep_pickup_datetime',
+        'lpep_dropoff_datetime',
+        'PULocationID',
+        'DOLocationID',
+        'passenger_count',
+        'trip_distance',
+        'tip_amount'
+    ]
+
     with open(csv_file, 'r', newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
 
         for i, row in enumerate(reader):
-            if i == 0:
-                print(row)
-            # Each row will be a dictionary keyed by the CSV headers
+            # Filter row to keep only required columns
+            filtered_row = {col: row[col] for col in columns_to_keep}
+            
             # Send data to Kafka topic "green-trips"
-            producer.send('green-trips', value=row)
+            producer.send('green-trips', value=filtered_row)
 
     # Make sure any remaining messages are delivered
     producer.flush()
     producer.close()
     end_time = time.time()
-    print(f'Duration: {end_time-start_time}')
+    print(f'Duration: {end_time-start_time:.2f} seconds')
 
 if __name__ == "__main__":
     main()

@@ -4,40 +4,49 @@ from pyflink.common.watermark_strategy import WatermarkStrategy
 from pyflink.common.time import Duration
 
 def create_events_aggregated_sink(t_env):
-    table_name = 'processed_events_aggregated'
+    table_name = 'processed_events'
     sink_ddl = f"""
         CREATE TABLE {table_name} (
-            event_hour TIMESTAMP(3),
-            test_data INT,
-            num_hits BIGINT,
-            PRIMARY KEY (event_hour, test_data) NOT ENFORCED
+            PULocationID INT,
+            DOLocationID INT,
+            num_trips BIGINT,
+            window_start TIMESTAMP(3),
+            window_end TIMESTAMP(3),
+            PRIMARY KEY (PULocationID, DOLocationID, window_start) NOT ENFORCED
         ) WITH (
             'connector' = 'jdbc',
-            'url' = 'jdbc:postgresql://postgres:9090/postgres',
+            'url' = 'jdbc:postgresql://postgres:5432/postgres',
             'table-name' = '{table_name}',
             'username' = 'postgres',
             'password' = 'postgres',
-            'driver' = 'org.postgresql.Driver'
+            'driver' = 'org.postgresql.Driver',
+            'sink.buffer-flush.max-rows' = '1'
         );
         """
     t_env.execute_sql(sink_ddl)
     return table_name
 
 def create_events_source_kafka(t_env):
-    table_name = "events"
+    table_name = "green_trips"
     source_ddl = f"""
         CREATE TABLE {table_name} (
-            test_data INTEGER,
-            event_timestamp BIGINT,
-            event_watermark AS TO_TIMESTAMP_LTZ(event_timestamp, 3),
-            WATERMARK for event_watermark as event_watermark - INTERVAL '1' SECOND
+            lpep_pickup_datetime STRING,
+            lpep_dropoff_datetime STRING,
+            PULocationID STRING,
+            DOLocationID STRING,
+            passenger_count STRING,
+            trip_distance STRING,
+            tip_amount STRING,
+            event_timestamp AS TO_TIMESTAMP(lpep_dropoff_datetime),
+            WATERMARK FOR event_timestamp AS event_timestamp - INTERVAL '5' SECOND
         ) WITH (
             'connector' = 'kafka',
             'properties.bootstrap.servers' = 'redpanda-1:29092',
-            'topic' = 'test-topic',
+            'topic' = 'green-trips',
             'scan.startup.mode' = 'earliest-offset',
-            'properties.auto.offset.reset' = 'earliest',
-            'format' = 'json'
+            'format' = 'json',
+            'json.ignore-parse-errors' = 'true',
+            'json.fail-on-missing-field' = 'false'
         );
         """
     t_env.execute_sql(source_ddl)
@@ -47,23 +56,15 @@ def create_events_source_kafka(t_env):
 def log_aggregation():
     # Set up the execution environment
     env = StreamExecutionEnvironment.get_execution_environment()
-    env.enable_checkpointing(10 * 1000)
+    # env.enable_checkpointing(60 * 1000) # Disable to avoid restart loop
+    # env.get_checkpoint_config().set_tolerable_checkpoint_failure_number(10)
     env.set_parallelism(3)
 
     # Set up the table environment
     settings = EnvironmentSettings.new_instance().in_streaming_mode().build()
     t_env = StreamTableEnvironment.create(env, environment_settings=settings)
+    t_env.get_config().set("table.exec.source.idle-timeout", "10 s")
 
-    watermark_strategy = (
-        WatermarkStrategy
-        .for_bounded_out_of_orderness(Duration.of_seconds(5))
-        .with_timestamp_assigner(
-            # This lambda is your timestamp assigner:
-            #   event -> The data record
-            #   timestamp -> The previously assigned (or default) timestamp
-            lambda event, timestamp: event[2]  # We treat the second tuple element as the event-time (ms).
-        )
-    )
     try:
         # Create Kafka table
         source_table = create_events_source_kafka(t_env)
@@ -72,14 +73,16 @@ def log_aggregation():
         t_env.execute_sql(f"""
         INSERT INTO {aggregated_table}
         SELECT
-            window_start as event_hour,
-            test_data,
-            COUNT(*) AS num_hits
-        FROM TABLE(
-            TUMBLE(TABLE {source_table}, DESCRIPTOR(event_watermark), INTERVAL '1' MINUTE)
-        )
-        GROUP BY window_start, test_data;
-        
+            CAST(PULocationID AS INT),
+            CAST(DOLocationID AS INT),
+            COUNT(*) AS num_trips,
+            SESSION_START(event_timestamp, INTERVAL '5' MINUTE) AS window_start,
+            SESSION_END(event_timestamp, INTERVAL '5' MINUTE) AS window_end
+        FROM {source_table}
+        GROUP BY
+            PULocationID,
+            DOLocationID,
+            SESSION(event_timestamp, INTERVAL '5' MINUTE)
         """).wait()
 
     except Exception as e:
